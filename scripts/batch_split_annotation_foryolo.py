@@ -3,20 +3,20 @@ import subprocess
 import sys
 import shutil
 
-HOMEDIR = "G:"
+HOMEDIR = "/media/wp/HDD/dataset"
 CURDIR = os.path.dirname(os.path.realpath(__file__))
-train_label_subsets = "G:/coco/yolo/data/labels/train2017"
-val_label_subsets = "G:/coco/yolo/data/labels/val2017"
-dst_label_dir = "G:/coco/yolo/data/labels"
+train_label_subsets = "/media/wp/HDD/dataset/COCO/yolo/data/labels/train2017"
+val_label_subsets = "/media/wp/HDD/dataset/COCO/yolo/data/labels/val2017"
+dst_label_dir = "/media/wp/HDD/dataset/COCO/yolo/data/labels"
 
 ### Modify the address and parameters accordingly ###
 # If true, redo the whole thing.
 redo = True
 # The root directory which stores the coco images, annotations, etc.
-coco_data_dir = "{}/coco".format(HOMEDIR)
+coco_data_dir = "{}/COCO".format(HOMEDIR)
 # The sets that we want to split. These can be downloaded at: http://mscoco.org
 # Unzip all the files after download.
-anno_sets = ["instances_train2017", "instances_val2017", "image_info_test2017"]
+anno_sets = ["new_instances_train2017", "new_instances_val2017"]
 # These are the sets that used in ION by Sean Bell and Ross Girshick.
 # These can be downloaded at: https://github.com/rbgirshick/py-faster-rcnn/tree/master/data
 # Unzip all the files after download. And move them to annotations/ directory.
@@ -38,11 +38,11 @@ def change(path, path1):
             change(path + os.sep + f, path1)
 
 ### Process each set ###
-for i in xrange(0, len(anno_sets)):
+for i in range(0, len(anno_sets)):
     anno_set = anno_sets[i]
     anno_file = "{}/{}.json".format(anno_dir, anno_set)
     if not os.path.exists(anno_file):
-        print "{} does not exist".format(anno_file)
+        print("{} does not exist".format(anno_file))
         continue
     anno_name = anno_set.split("_")[-1]
     out_dir = "{}/{}".format(out_anno_dir, anno_name)
@@ -50,10 +50,10 @@ for i in xrange(0, len(anno_sets)):
     if redo or not os.path.exists(out_dir):
         cmd = "python {}/split_annotation_foryolo.py --out-dir={} --imgset-file={} {}" \
                 .format(CURDIR, out_dir, imgset_file, anno_file)
-        print cmd
+        print(cmd)
         process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
         output = process.communicate()[0]
-        print output
+        print(output)
 
 # Copy annotations from subset to labels.
 change(train_label_subsets, dst_label_dir)

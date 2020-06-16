@@ -6,10 +6,10 @@ import subprocess
 import sys
 import shutil
 
-train_image_subsets = "G:/coco/CocoImages/train2017"
-val_image_subsets = "G:/coco/CocoImages/val2017"
-test_image_subsets = "G:/coco/CocoImages/test2017"
-dst_image_dir = "G:/coco/CocoImages/JPEGImages"
+train_image_subsets = "/media/wp/HDD/dataset/COCO/train2017"
+val_image_subsets = "media/wp/HDD/dataset/COCO/val2017"
+#test_image_subsets = "media/wp/HDD/dataset/COCO/test2017"
+dst_image_dir = "media/wp/HDD/dataset/COCO/JPEGImages"
 
 def change(path, path1):
     for f in os.listdir(path):
@@ -23,4 +23,4 @@ def change(path, path1):
 # Copy annotations from subset to labels.
 change(train_image_subsets, dst_image_dir)
 change(val_image_subsets, dst_image_dir)
-change(test_image_subsets, dst_image_dir)
+#change(test_image_subsets, dst_image_dir)

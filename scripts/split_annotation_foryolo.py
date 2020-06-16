@@ -1,15 +1,12 @@
 from pycocotools.coco import COCO
 import argparse
-from collections import OrderedDict
-import json
+
 import os
-from pprint import pprint
+
 import sys
-import skimage.io as io
-import matplotlib.pyplot as plt
-import pylab
+
 sys.path.append(os.path.dirname(sys.path[0]))
-pylab.rcParams['figure.figsize'] = (8.0, 10.0)
+
 
 from pycocotools.coco import COCO
 
@@ -25,7 +22,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     annofile = args.annofile
     if not os.path.exists(annofile):
-        print "{} does not exist!".format(annofile)
+        print("{} does not exist!".format(annofile))
         sys.exit()
 
     out_dir = args.out_dir
@@ -61,9 +58,17 @@ if __name__ == "__main__":
             dw = 1. / (width)
             dh = 1. / (height)
             yoloanno_filename = "{}/{}.txt".format(out_dir, name)
-            yoloanno_file = open(yoloanno_filename, 'w')
+            yoloanno_file = None
             if(len(anno) > 0):
                 for s_anno in anno:
+                    cat_id = s_anno["category_id"]
+                    if cat_id != 1 and cat_id != 88:
+                        continue
+                    
+                    if cat_id == 1:
+                        cat_id = 0
+                    elif cat_id == 88:
+                        cat_id = 77
                     x_center = s_anno["bbox"][0]+s_anno["bbox"][2]/2.0
                     y_center = s_anno["bbox"][1]+s_anno["bbox"][3]/2.0
                     w = s_anno["bbox"][2]
@@ -72,11 +77,13 @@ if __name__ == "__main__":
                     y_center = y_center * dh
                     w = w * dw
                     h = h * dh
-                    cat_id = s_anno["category_id"]
+                    
                     bb = (x_center, y_center, w, h)
+                    if not yoloanno_file:
+                        yoloanno_file = open(yoloanno_filename, 'w')
                     yoloanno_file.write(str(cat_id) + " " + " ".join([str(a) for a in bb]) + '\n')
-        if imgset_file:
-            img_names.append(name)
+            if imgset_file and yoloanno_file:
+                img_names.append(name)
     if img_names:
         img_names.sort()
         with open(imgset_file, "w") as f:
